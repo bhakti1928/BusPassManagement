@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Receipt</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+
+<div class="container mt-5">
+
+    <div class="card shadow p-4 mx-auto" style="max-width:500px;">
+
+        <h2 class="text-success text-center">
+            ✅ Payment Successful
+        </h2>
+
+        <hr>
+
+        <p><strong>Transaction ID :</strong> <span id="txn"></span></p>
+
+        <p><strong>Amount :</strong> ₹<span id="amount"></span></p>
+
+        <p><strong>Status :</strong>
+            <span class="text-success">Paid</span>
+        </p>
+
+        <p><strong>Date :</strong> <span id="date"></span></p>
+
+        <button class="btn btn-success w-100 mb-2"
+            onclick="window.print()">
+            Print Receipt
+        </button>
+
+        <a href="index.html" class="btn btn-primary w-100">
+            Go Home
+        </a>
+
+    </div>
+
+</div>
+
+<script>
+
+const params = new URLSearchParams(window.location.search);
+
+document.getElementById("txn").innerText =
+    params.get("txn");
+
+const pass = JSON.parse(localStorage.getItem("busPassData"));
+
+let amount = 300;
+
+if (pass) {
+
+    if (pass.pass_type === "Monthly") {
+        amount = 300;
+    } else if (pass.pass_type === "Quarterly") {
+        amount = 800;
+    } else if (pass.pass_type === "Yearly") {
+        amount = 3000;
+    }
+
+}
+
+document.getElementById("amount").innerText = amount;
+
+document.getElementById("date").innerText =
+    new Date().toLocaleString();
+
+</script>
+
+</body>
+</html>

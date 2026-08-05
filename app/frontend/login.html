@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Login</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="login.css">
+</head>
+
+<body>
+
+
+<header class="top-header">
+    <div class="container d-flex justify-content-between align-items-center h-100">
+        <h3>🚌 Bus Pass Management System</h3>
+        <span><i class="bi bi-person-circle"></i> Student Portal</span>
+    </div>
+</header>
+
+
+
+<div class="login-card">
+
+    <div class="logo">
+        🚌
+    </div>
+
+    <h1>Bus Pass Management System</h1>
+
+    <h4>Welcome Back!</h4>
+
+    <p>Please login to continue</p>
+
+    <div class="mb-3">
+        <label>Email</label>
+
+        <div class="input-group">
+
+            <span class="input-group-text">
+                <i class="bi bi-envelope"></i>
+            </span>
+
+            <input
+            type="email"
+            id="email"
+            class="form-control"
+            placeholder="Enter Email">
+
+        </div>
+    </div>
+
+    <div class="mb-3">
+
+        <label>Password</label>
+
+        <div class="input-group">
+
+            <span class="input-group-text">
+                <i class="bi bi-lock"></i>
+            </span>
+
+            <input
+            type="password"
+            id="password"
+            class="form-control"
+            placeholder="Enter Password">
+
+        </div>
+
+    </div>
+
+    <button
+    class="btn btn-primary w-100 login-btn"
+    onclick="loginStudent()">
+
+        <i class="bi bi-box-arrow-in-right"></i>
+
+        Login
+
+    </button>
+    <div class="text-center mt-3">
+    <p>Don't have an account?</p>
+
+    <a href="register.html" class="btn btn-outline-light"
+        <i class="bi bi-person-plus"></i>
+        Create New Account
+    </a>
+</div>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
