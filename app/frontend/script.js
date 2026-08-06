@@ -47,7 +47,7 @@ async function loginStudent() {
 console.log(data.email);
 
     try {
-        const response = await fetch("http://127.0.0.1:8000/student/login", {
+        const response = await fetch(`${API}/student/login`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -81,8 +81,15 @@ console.log(data.email);
 
 async function applyBusPass() {
 
+    const studentIdRaw = document.getElementById("student_id").value;
+    const studentId = parseInt(studentIdRaw);
+    if (isNaN(studentId)) {
+        alert("Please enter a valid Student ID");
+        return;
+    }
+
     const data = {
-        student_id: parseInt(document.getElementById("student_id").value),
+        student_id: studentId,
         source: document.getElementById("source").value,
         destination: document.getElementById("destination").value,
         pass_type: document.getElementById("pass_type").value,
@@ -132,11 +139,16 @@ async function checkStatus() {
     try {
 
         const response = await fetch(`${API}/buspass/student/${studentId}`);
-        const data = await response.json();
+        const json = await response.json().catch(() => null);
 
         if (response.ok) {
 
-            const pass = data[data.length - 1];
+            if (!json || json.length === 0) {
+                document.getElementById("result").innerHTML = `<p style="color:orange;">No bus pass found for this student.</p>`;
+                return;
+            }
+
+            const pass = json[json.length - 1];
 
             document.getElementById("result").innerHTML = `
                 <h3>Bus Pass Details</h3>
@@ -173,6 +185,7 @@ async function loadBusPasses() {
         const data = await response.json();
 
         const tbody = document.querySelector("#passTable tbody");
+        if (!tbody) return;
         tbody.innerHTML = "";
 
         data.forEach(pass => {
@@ -228,13 +241,13 @@ async function updateStatus(passId, status) {
     try {
 
         const response = await fetch(
-            `${API}/admin/buspass/${passId}?status=${status}`,
+            `${API}/admin/buspass/${passId}?status=${encodeURIComponent(status)}`,
             {
                 method: "PUT"
             }
         );
 
-        const result = await response.json();
+        const result = await response.json().catch(() => null);
 
         if (response.ok) {
             alert("✅ Status Updated");
