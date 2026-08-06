@@ -104,12 +104,12 @@ async function applyBusPass() {
 
 if (response.ok) {
 
-    // Apply केलेली माहिती save करा
+    
     localStorage.setItem("busPassData", JSON.stringify(data));
 
     alert("✅ Bus Pass Applied Successfully");
 
-    // Payment Page ला जा
+    
     window.location.href = "payment.html";
 
 } else {
