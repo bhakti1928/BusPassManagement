@@ -1,5 +1,4 @@
-const API = "http://127.0.0.1:8000";
-
+const API = "https://buspassmanagement-vqpu.onrender.com";
 async function registerStudent() {
 
     const data = {
@@ -43,10 +42,10 @@ async function loginStudent() {
         password: document.getElementById("password").value
     };
 
-
-console.log(data.email);
+    console.log("Login data:", data);
 
     try {
+
         const response = await fetch(`${API}/student/login`, {
             method: "POST",
             headers: {
@@ -57,45 +56,52 @@ console.log(data.email);
 
         const result = await response.json();
 
+        console.log("Login response:", result);
+
         if (response.ok) {
 
-    alert("✅ Login Successful");
+            alert("✅ Login Successful");
 
-    // Student information save
-    localStorage.setItem("studentEmail", data.email);
+            // Save logged-in student information
+            localStorage.setItem("studentEmail", data.email);
+            localStorage.setItem("studentId", result.student.id);
 
-    // पुढच्या page वर जा
-    window.location.href = "apply.html";
+            // Go to Apply Pass page
+            window.location.href = "apply.html";
 
-} else {
+        } else {
 
-    alert(result.detail || "Invalid Email or Password");
+            alert(result.detail || "Invalid Email or Password");
 
-}
+        }
 
     } catch (error) {
+
         console.error(error);
         alert("Server Error");
+
     }
 }
 
 async function applyBusPass() {
 
-    const studentIdRaw = document.getElementById("student_id").value;
-    const studentId = parseInt(studentIdRaw);
-    if (isNaN(studentId)) {
-        alert("Please enter a valid Student ID");
+    const studentId = document.getElementById("student_id").value;
+
+    if (!studentId) {
+        alert("Please enter Student ID");
         return;
     }
 
     const data = {
-        student_id: studentId,
+        student_id: parseInt(studentId),
         source: document.getElementById("source").value,
         destination: document.getElementById("destination").value,
         pass_type: document.getElementById("pass_type").value,
         start_date: document.getElementById("start_date").value,
         end_date: document.getElementById("end_date").value
     };
+
+    console.log("Sending Bus Pass Data:", data);
 
     try {
 
@@ -109,27 +115,34 @@ async function applyBusPass() {
 
         const result = await response.json();
 
-if (response.ok) {
+        console.log("Backend Response:", result);
 
-    
-    localStorage.setItem("busPassData", JSON.stringify(data));
+        if (response.ok) {
 
-    alert("✅ Bus Pass Applied Successfully");
+            localStorage.setItem(
+                "busPassData",
+                JSON.stringify(result)
+            );
 
-    
-    window.location.href = "payment.html";
+            alert("✅ Bus Pass Applied Successfully");
 
-} else {
+            window.location.href = "payment.html";
 
-    alert(result.detail || "Failed to Apply");
+        } else {
 
+            alert(
+                result.detail ||
+                "Failed to Apply Bus Pass"
+            );
+        }
+
+    } catch (error) {
+
+        console.error("Bus Pass Error:", error);
+
+        alert("Server Error. Please try again.");
+    }
 }
-} catch (error) {
-    console.error(error);
-    alert("Server Error");
-}
-}
-
 
 
 async function checkStatus() {
@@ -139,16 +152,11 @@ async function checkStatus() {
     try {
 
         const response = await fetch(`${API}/buspass/student/${studentId}`);
-        const json = await response.json().catch(() => null);
+        const data = await response.json();
 
         if (response.ok) {
 
-            if (!json || json.length === 0) {
-                document.getElementById("result").innerHTML = `<p style="color:orange;">No bus pass found for this student.</p>`;
-                return;
-            }
-
-            const pass = json[json.length - 1];
+            const pass = data[data.length - 1];
 
             document.getElementById("result").innerHTML = `
                 <h3>Bus Pass Details</h3>
@@ -185,7 +193,6 @@ async function loadBusPasses() {
         const data = await response.json();
 
         const tbody = document.querySelector("#passTable tbody");
-        if (!tbody) return;
         tbody.innerHTML = "";
 
         data.forEach(pass => {
@@ -241,13 +248,13 @@ async function updateStatus(passId, status) {
     try {
 
         const response = await fetch(
-            `${API}/admin/buspass/${passId}?status=${encodeURIComponent(status)}`,
+            `${API}/admin/buspass/${passId}?status=${status}`,
             {
                 method: "PUT"
             }
         );
 
-        const result = await response.json().catch(() => null);
+        const result = await response.json();
 
         if (response.ok) {
             alert("✅ Status Updated");
